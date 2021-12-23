@@ -1,4 +1,4 @@
-![스크린샷 2021-11-15 오후 5.34.48.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/af550557-1a68-4a61-b417-51aa2ac7ae70/스크린샷_2021-11-15_오후_5.34.48.png)
+
 
 - 내가 적은 답
     
