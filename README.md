@@ -8,7 +8,7 @@
 # 분류
 ---
 
-[JAVA](https://github.com/Jhno-Ahn/TIL/tree/main/JAVA%EC%97%B0%EC%8A%B5%EB%AC%B8%EC%A0%9C)
+[JAVA](https://github.com/Jhno-Ahn/TIL/tree/main/JAVA)
 - 연습문제
 - 동영상 강의
 
