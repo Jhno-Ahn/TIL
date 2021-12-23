@@ -8,31 +8,27 @@
 # 분류
 ---
 
-JAVA
+[JAVA](https://github.com/Jhno-Ahn/TIL/tree/main/JAVA%EC%97%B0%EC%8A%B5%EB%AC%B8%EC%A0%9C)
 - 연습문제
 - 동영상 강의
 
-SPRING
+[SPRING](https://github.com/Jhno-Ahn/TIL/tree/main/SPRING)
 - 토이프로젝트
 - 진행과정
 
-SQLD
-- 자격증 공부
-- 문제풀이
+[LICENSE](https://github.com/Jhno-Ahn/TIL/tree/main/LICENCE)
+- SQLD
+- 정보처리산업기사
 
-정처기준비
-- 공부
-- 문제풀이
-
-기술면접준비
+[기술면접준비](https://github.com/Jhno-Ahn/TIL/tree/main/%EA%B8%B0%EC%88%A0%EB%A9%B4%EC%A0%91)
 - 예상질문과 답변
 - 진행상황
 
-기초리눅스명령어
+[기초리눅스명령어](https://github.com/Jhno-Ahn/TIL/tree/main/LINUX)
 - 공부
 - 진행상황
 
-알고리즘
+[ALGORITHM](https://github.com/Jhno-Ahn/TIL/tree/main/ALGORITHM)
 - 공부
 - 문제풀이
 
