@@ -312,7 +312,7 @@
 
 <img width="558" alt="스크린샷 2022-01-04 오전 11 14 41" src="https://user-images.githubusercontent.com/81155572/148003480-4302db35-8871-485b-a8f3-82556531b0a3.png">
 
-- 내가적은답
+- 내가 적은 답
    - ABC123456
    - ABC123456
 
@@ -328,11 +328,68 @@
 
 <img width="538" alt="스크린샷 2022-01-04 오전 11 14 59" src="https://user-images.githubusercontent.com/81155572/148006045-4fe79faa-6f4c-4216-8399-e1dbda2e4fb4.png">
 
+- 내가 적은 답
 
+- 정답
+~~~
+package practice_6;
 
+public class Practice_6_20 {
+	public static int[] shuffle(int[] arr) {
+		if(arr==null || arr.length==0)
+			return arr;
+		
+		for(int i=0; i<arr.length; i++) {
+			int j = (int)(Math.random() * arr.length);
+			
+			// arr[i]와 arr[j]의 값을 서로 바꾼다.
+			int tmp = arr[i];
+			arr[i] = arr[j];
+			arr[j] = tmp;
+		}
+		return arr;
+	}
+	public static void main(String[] args) {
+		
+		int[] original = {1,2,3,4,5,6,7,8,9};
+		System.out.println(java.util.Arrays.toString(original));
+		
+		int[] result = shuffle(original);
+		System.out.println(java.util.Arrays.toString(result));
+	}
+}
+~~~
 
+- 오답노트
+   - 매개변수로 어떤 값이 넘어올지 모르기 때문에 값의 유효성체크를 해야 한다.
+   - Math.rondom함수를 통해 j의 값을 임의로 설정
+   - arr[i]를 tmp에, arr[j]를 arr[i]에, 다시 tmp를 arr[j]에 넣어 섞는다.
 
+---
 
+<img width="707" alt="스크린샷 2022-01-05 오후 12 28 55" src="https://user-images.githubusercontent.com/81155572/148156279-4c8967b7-87da-46ec-ae07-fbc20a9d5520.png">
 
+- 정답
+~~~
+	public static boolean isNumber(String str) {
+		if(str == null || str.equals(""))
+			return false;
+		
+		for(int i=0; i<str.length(); i++) {
+			char ch = str.charAt(i);
+			
+			if(ch < '0' || ch > '9') {
+				return false;
+			}
+		}
+		return true;
+	}
+~~~
 
+- 오답노트
+  - null이거나 빈 문자열이면 false반환
+  - for문을 이용한다. charAt(i)를 이용해 ch에 저장
+  - 저장된 것들을 if문을 이용해 숫자가 들어갔는지 확인
+
+---
 
