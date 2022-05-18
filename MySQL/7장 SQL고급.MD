@@ -130,3 +130,139 @@ SELECT @myVar + @myVar2;
         - FIND_IN_SET() : 찾을 문자열을 문자열 리스트에서 찾아 위치 반환( 콤마로 구분하고 공백 없어야 함)
         - INSTR() : 기본 문자열에서 부분 문자열 찾아 그 시작 위치 반환
         - LOCATE()는 INSTR()와 동일하지만 파라미터의 순서가 반대
+## 피벗의 구현
+
+- 피벗(Pivot) 이란?
+    - 한 열에 포함된 여러 값 출력, 이를 여러 열로 변환하여 테이블 반환식 회전, 필요하면 집계까지 수행
+
+## JSON 데이터
+
+- 웹과 모바일 응용프로그램 등과 데이터 교환하기 위한 개방형 표준 포맷
+- 속성(KEY) 과 값(VALUE)으로 쌍을 이루며 구성
+- JavaScript 언어에서 파생
+- 특정한 프로그래밍 언어에 종속되어 있지 않은 독립적인 데이터 포맷
+- 포맷이 단순하고 공개되어 있기에 거의 대부분의 프로그래밍 언어에서 쉽게 읽거나 쓸 수 있음
+
+## 조인(Join)
+
+- 두 개 이상의 테이블을 서로로 묶어서 하나의 결과 집합으로 만들어 내는 것
+- INNER, OUTER, CROSS, SELF 조인이 있다.
+- 데이터베이스의 테이블
+    - 중복과 공간 낭비를 피하고 무결성을 위해서 여러 개의 테이블로 분리 저장
+    - 1대 다 관계 보편적
+
+## INNER JOIN(내부 조인)
+
+- 조인 중에서 가장 많이 사용되는 조인
+    - 대개의 업무에서 조인은 이너조인 사용
+    - 일반적으로 JOIN이라고 하는 것은 이너조인임
+    
+    ```sql
+    SELECT <열 목록>
+    FROM <첫 번째 테이블>
+    		INNER JOIN <두 번째 테이블>
+    		ON <조인될 조건>
+    [WHERE 검색조건]
+    ```
+    
+
+## OUTER JOIN(외부 조인)
+
+- 조인의 조건에 만족되지 않는 행까지도 포함시키는 것
+- LEFT OUTER JOIN
+    - 왼쪽 테이블의 것은 모두 출력되어야 한다로 이해
+- RIGHT OUTER JOIN
+    - 오른쪽 테이블의 것은 모두 출력되어야 한다로 이해
+
+```sql
+SELECT <열 목록>
+FROM <철 번째 테이블(LEFT 테이블)>
+<LEFT | RIGHT | FULL > OUTER JOIN <두 번째 테이블(RIGHT 테이블)>
+	ON <조인될 조건>
+[WHERE 검색조건];
+```
+
+## CROSS JOIN(상호 조인)
+
+- 한쪽 테이블의 모든 행들과 다른 쪽 테이블의 모든 행을 조인시키는 기능
+- 크로스조인의 결과 개수 = 두 테이블 개수를 곱한 개수
+    
+    ![스크린샷 2022-05-18 오후 4.34.00.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/fecc443a-e250-4a60-b324-22bbb44814be/스크린샷_2022-05-18_오후_4.34.00.png)
+    
+- 테스트로 사용할 많은 용량의 데이터를 생성할 때 주로 사용
+- ON 구문 사용 x
+- 대량의 데이터를 생성하면 시스템이 다운되거나 디스크 용량이 모두 찰 수 있어COUNT(*) 함수로 개수만 카운트
+
+```sql
+SELECT COUNT(*) AS '데이터 개수'
+	FROM employees
+		CROSS JOIN titles;
+```
+
+## SELF JOIN(자체 조인)
+
+- 자기 자신과 자기 자신이 조인한다는 의미
+- 조직도와 관련된 테이블
+
+## IF..ELSE
+
+- 조건에 따라 분기
+- 한 문장 이상 처리되어야 할때 BEGIN.. END로 묶어주기
+
+```sql
+형식 :
+IF <부울 표현식 > THEN
+	SQL문장1
+ELSE
+	SQL문장2
+END IF;
+```
+
+## CASE
+
+- 조건에 따라 분기
+    - 다중 분기
+    - 조건에 맞는 WHEN이 여러 개더라도 먼저 조건이 맞는 WHEN이 처리됨
+    - 점수로 성적을 판단하는 경우처럼 여러 단계로 분기 될 때 사용
+
+## WHILE/ITERATE/LEAVE
+
+- WHILE문
+    - 다른 언어의 WHILE과 동일 개념
+    - 참인 동안 반복되는 반복문
+    
+    ```sql
+    형식 : 
+    WHILE <부울 식> DO
+    	SQL 명령문들..
+    END WHILE;
+    ```
+    
+    - ITERATE문을 만나면 WHILE문으로 이동해서 다시 비교 (CONTINUE와 동일 개념)
+    - LEAVE문을 만나면 WHILE문 빠져나옴(BREAK 동일 개념)
+
+## 오류 처리
+
+- 형식 : DECLARE 액션 HANDLER FOR 오류조건 처리할문장;
+- 액션
+    - 오류 발생 시에 행동 정의
+    - CONTINUE와 EXIT 둘 중 하나 사용, CONTINUE가 나오면 제일 뒤에 처리할문장 부분이 처리
+- 오류 조건 : 어떤 오류를 처리할 것인지를 지정
+    - MySQL의 오류 코드 숫자가가 오거나 SQLSTATE’상태코드’, SQLEXCEPTION 등이 올 수 있음
+
+```sql
+CREATE PROCEDURE errorProc()
+BEGIN
+	DECLARE CONTINUE HANDLER FOR 1146 SELECT '테이블 없음' AS '메시지';
+	SELECT * FROM noTable; -- noTable은 존재하지 않는 테이블
+END
+CALL errorProc();
+```
+
+## 동적 SQL
+
+- PREPARE문
+    - SQL문을 실행하지는 않고 미리 준비만 해놓음
+- EXECUTE문
+    - 준비한 쿼리문 실행
+    - 실행 후에는 DEALLOCATE PREFARE로 문장 해제
