@@ -6,129 +6,31 @@
 | View | JSP | JSP |
 | Controller | JSP | Servlet |
 |  |  |  |
-- model1은 뷰와 컨트롤러 모두 JSP에서 처리했지만
-- model2는 뷰는 JSP에서, 컨트롤러는 Servlet에서 처리해준다.
 
-## 컨트롤을 담당하는 Controller.java
+## MVC Model 2
 
-```java
-package control;
+### View(뷰) (JSP)
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Properties;
+- 화면에 내용을 표출하는 역할을 담당.
+- 단지 정보를 보여주는 역할만을 담당.
+- 데이터가 어떻게 생성되고, 어디서 왔는지에 전혀 관여하지 않는다.
 
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+### Model(모델) (javaBean)
 
-import handler.CommandHandler;
-import handler.DefaultHandler;
+- 어플리케이션의 수행에 필요한 데이터를 모델링하고 비즈니스 로직을 처리
+- 데이터를 생성하고 저장하고 처리하는 역할만을 담당
+1. 컨트롤러의 요청을 받는다.
+2. 비즈니스 로직(데이터베이스와 사용자 인터페이스 사이의 정보 교환을 처리하는 알고리즘)을 처리한다.
+3. 처리한 비즈니스 로직의 결과를 컨트롤러로 반환한다.
 
-public class Controller extends HttpServlet {
-	
-	private Map<String, CommandHandler> handlerMap 
-		= new HashMap<String, CommandHandler> ();
-	public void init( ServletConfig config ) throws ServletException {
-		String configFile = config.getInitParameter( "configFile" );
-		String path = config.getServletContext().getRealPath( "/" );
-		String filename = path + "/" + configFile;
-		Properties prop = new Properties();
-		FileInputStream fis = null;
-		
-		try {
-			fis = new FileInputStream( filename );
-			prop.load( fis );
-			Iterator<Object> keys = prop.keySet().iterator();
-			while( keys.hasNext() ) {
-				String command = (String) keys.next();
-				String handlerName = prop.getProperty( command );
-				Class<?> handlerClass = Class.forName( handlerName );
-				CommandHandler handler = (CommandHandler) handlerClass.newInstance();
-				handlerMap.put( command, handler );
-			}			
-		} catch( FileNotFoundException e ) {
-			e.printStackTrace();
-		} catch( IOException e ) {
-			e.printStackTrace();
-		} catch( ClassNotFoundException e ) {
-			e.printStackTrace();
-		} catch( IllegalAccessException  e ) {
-			e.printStackTrace();
-		} catch( InstantiationException e ) {
-			e.printStackTrace();
-		}		
-	}	
-	public void doProcess( HttpServletRequest request, HttpServletResponse response ) 
-		throws ServletException, IOException {
-		
-		String command = request.getRequestURI();
-		if( command.indexOf( request.getContextPath() ) == 0 ) {
-			command = command.substring( request.getContextPath().length() );
-		}
-		
-		CommandHandler handler = handlerMap.get( command );
-		if( handler == null ) {
-			handler = new DefaultHandler();
-		}
-		String viewPage = null;
-		
-		try {
-			viewPage = handler.process( request, response );
-		} catch( Throwable e ) {
-			e.printStackTrace();
-		}
-		
-		RequestDispatcher dispatcher = request.getRequestDispatcher( viewPage );
-		dispatcher.forward( request, response );		
-	}	
-	public void doGet( HttpServletRequest request, HttpServletResponse response )
-		throws ServletException, IOException {
-		doProcess( request, response );
-	}
-	public void doPost( HttpServletRequest request, HttpServletResponse response ) 
-		throws ServletException, IOException {
-		doProcess( request, response );
-	}
-	
-} // class
-```
+### Controller(컨트롤러) (servlet)
 
-## 핸들러를 담당하는 CommanHandler.java
-
-```java
-package handler;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-public interface CommandHandler {
-	public String process( HttpServletRequest request, HttpServletResponse reponse )
-		throws Throwable;
-}
-```
-
-## 디폴트를 담당하는 DefaultHandler.java
-
-```java
-package handler;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-public class DefaultHandler implements CommandHandler {
-	@Override
-	public String process(HttpServletRequest request, HttpServletResponse reponse) throws Throwable {
-		request.setAttribute( "result", "처리할 수 없는 요청입니다." );
-		return "/member/default.jsp";
-	}
-
-}
-```
+- 어플리케이션의 흐름을 제어하는 것으로 뷰와 모델 사이에서 이들의 흐름을 제어.
+- 사용자의 요청을 받아서 모델에 넘겨주고 모델이 처리한 결과를 뷰에 보내준다.
+1. 클라이언트의 요청을 받는다.
+2. 클라이언트가 요구하는 작업을 분석한다.
+    1. String type = request.getParameter(”type”);
+3. 비즈니스 로직을 처리하는 모델(javaBean)을 사용
+4. 처리결과를 request 또는 session의 속성에 저장
+    1. request.setAttribute(”result”,result);
+5. 적당한 뷰를 선택 후 뷰로 포워딩. 서블릿에서 dispatcher.forward(request, response)로 해당 JSP페이지와 request, response를 공유한 경우 해당 JSP페이지에서 request.getAttribute(”result”와 같이 사용해서 결과를 화면에 표출한다.
